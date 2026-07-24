@@ -2,3 +2,5 @@
 *.out
 a.out
 *.exe
+*.bin
+*.elf
