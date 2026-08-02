@@ -13,8 +13,10 @@ Two software-triggered timer interrupts (TIM2, TIM3) are assigned different NVIC
 - ST-Link V2 (SWD)
 
 ## Build & flash
-```make
-make flash```
+```
+make
+make flash
+```
 
 ## Expected behavior
 
