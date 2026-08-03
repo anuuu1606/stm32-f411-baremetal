@@ -51,9 +51,9 @@ int main() {
             // blink once to indicate failure of HSE oscillator
             if (hse_failure == 1) {
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 hse_failure = 0;
             }
 
@@ -96,13 +96,13 @@ int main() {
             // blink twice to indicate failure of PLL oscillator
             if (PLL_failure == 1) {
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 PLL_failure = 0;
             }
 
@@ -139,15 +139,15 @@ int main() {
             // blink thrice to indicate failure of SWS oscillator
             if (SWS_failure == 1) {
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
-                delay(10000);
+                delay(2000000);
                 SWS_failure = 0;
             }
 
@@ -161,20 +161,15 @@ int main() {
     // reload_value = (desired_time_seconds × SystemCoreClock) − 1
     // reload_value = (1 * 84,000,000) − 1 = 83,999,999
 
-    // enable SysTick
-    STK_CTRL |= (1 << 0);
-
-    // enable interrupt-driven SysTick
-    STK_CTRL |= (1 << 1);
-
-    // use core clock (not divided)
-    STK_CTRL |= (1 << 2);
-
     // 83,999,999 does not fit in STK_LOAD so 0.1 ms used instead of 1 ms
     // reload_value = (0.1 * 84,000,000) - 1 = 8,399,999
     STK_LOAD = 8399999;
 
+    // starting value for SysTick
     STK_VAL = 0;
+
+    // enable SysTick, enable interrupt-driven, use core clock (not divided)
+    STK_CTRL |= (1 << 0) | (1 << 1) | (1 << 2);
 
     while (1) {
     // idle state
