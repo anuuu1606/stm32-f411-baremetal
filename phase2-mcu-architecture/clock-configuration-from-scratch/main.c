@@ -16,10 +16,10 @@ volatile int tick_count = 0;
 uint32_t SystemCoreClock = 16000000;
 
 void SysTick_Handler(void) {
-        tick_count++;
-        if (tick_count == 10) {
-            GPIOC_ODR ^= (1 << 13);   // toggle PC13
-            tick_count = 0;
+    tick_count++;
+    if (tick_count == 10) {
+        GPIOC_ODR ^= (1 << 13);   // toggle PC13
+        tick_count = 0;
         }
     }
 
@@ -39,7 +39,7 @@ int main() {
     // if faulty and did not start then FAILURE block executes
     bool HSE_STATE = false;
     int hse_failure = 0;
-    for (int HSE_COUNTER = 0; HSE_COUNTER < 11; HSE_COUNTER++) {
+    for (int HSE_COUNTER = 0; HSE_COUNTER < 1000; HSE_COUNTER++) {
         if (RCC_CR & (1 << 17)) {
             HSE_STATE = true;
             break;
@@ -48,8 +48,14 @@ int main() {
     if (HSE_STATE == false) {
         hse_failure = 1;
         while(1) {
-            // blink once to indicate failure of HSE oscillator
+            // blink twice to indicate failure of HSE oscillator
             if (hse_failure == 1) {
+                GPIOC_ODR ^= (1 << 13);   // toggle PC13
+                delay(2000000);
+                GPIOC_ODR ^= (1 << 13);   // toggle PC13
+                delay(2000000);
+                GPIOC_ODR ^= (1 << 13);   // toggle PC13
+                delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
                 delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
@@ -84,7 +90,7 @@ int main() {
     // if faulty and did not start then FAILURE block executes
     bool PLL_STATE = false;
     int PLL_failure = 0;
-    for (int PLL_COUNTER = 0; PLL_COUNTER < 11; PLL_COUNTER++) {
+    for (int PLL_COUNTER = 0; PLL_COUNTER < 1000; PLL_COUNTER++) {
         if (RCC_CR & (1 << 25)) {
             PLL_STATE = true;
             break;
@@ -95,6 +101,8 @@ int main() {
         while(1) {
             // blink twice to indicate failure of PLL oscillator
             if (PLL_failure == 1) {
+                GPIOC_ODR ^= (1 << 13);   // toggle PC13
+                delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
                 delay(2000000);
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
@@ -124,7 +132,7 @@ int main() {
     // if faulty and did not start then FAILURE block executes
     bool SWS_STATE = false;
     int SWS_failure = 0;
-    for (int SWS_COUNTER = 0; SWS_COUNTER < 11; SWS_COUNTER++) {
+    for (int SWS_COUNTER = 0; SWS_COUNTER < 1000; SWS_COUNTER++) {
         if (((RCC_CFGR >> 2) & 0x3) == 2) { 
             // important: in previous checks, only single bit was being checked
             // here 2 bits are being checked if they are 10
@@ -136,7 +144,7 @@ int main() {
     if (SWS_STATE == false) {
         SWS_failure = 1;
         while(1) {
-            // blink thrice to indicate failure of SWS oscillator
+            // blink twice to indicate failure of SWS oscillator
             if (SWS_failure == 1) {
                 GPIOC_ODR ^= (1 << 13);   // toggle PC13
                 delay(2000000);
@@ -161,7 +169,7 @@ int main() {
     // reload_value = (desired_time_seconds × SystemCoreClock) − 1
     // reload_value = (1 * 84,000,000) − 1 = 83,999,999
 
-    // 83,999,999 does not fit in STK_LOAD so 0.1 ms used instead of 1 ms
+    // 83,999,999 does not fit in STK_LOAD so 0.1 s used instead of 1 s
     // reload_value = (0.1 * 84,000,000) - 1 = 8,399,999
     STK_LOAD = 8399999;
 
