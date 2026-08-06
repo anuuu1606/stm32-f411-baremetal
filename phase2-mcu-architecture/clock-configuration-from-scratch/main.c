@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define RCC_CR (*(volatile uint32_t*)0x40023800)
+#define RCC_CR (*(volatile unsigned int *)0x40023800)
 #define RCC_AHB1ENR (*(volatile unsigned int *)0x40023830)
 #define GPIOC_MODER (*(volatile unsigned int *)0x40020800)
 #define GPIOC_ODR (*(volatile unsigned int *)0x40020814)
