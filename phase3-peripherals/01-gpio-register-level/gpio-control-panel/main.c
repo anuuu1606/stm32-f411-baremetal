@@ -5,6 +5,31 @@
 #define GPIOA_PUPDR (*(volatile unsigned int *)0x4002000C)
 #define GPIOA_IDR (*(volatile unsigned int *)0x40020010)
 
+#include <stdbool.h>
+
+// function to check whether button has been properly pressed and not just electrical noise
+bool ButtonPressed (int num) {
+    static int count[2] = {0, 0}; // one slot per button & initializer only runs once
+    static bool already_fired[2] = {false, false};
+
+    int pin_val = (GPIOA_IDR >> num) & 1;
+
+    if (pin_val == 0 ) { // as the buttons are active low and 0 gives 'pressed' reading
+        count[num]++;
+        if (count[num] == 100 && !already_fired[num]) { // 100 may require tuning
+            count[num] = 0;
+            already_fired[num] = true;
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        count[num] = 0;
+        already_fired[num] = false;  // released -> allow next press to fire
+    }
+    return false;
+}
+
 int main() {
     
     // enable clocks for GPIOA and GPIOB in RCC_AHB1ENR
