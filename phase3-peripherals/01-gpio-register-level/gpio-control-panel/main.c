@@ -4,6 +4,7 @@
 #define GPIOB_OTYPER (*(volatile unsigned int *)0x40020404)
 #define GPIOA_PUPDR (*(volatile unsigned int *)0x4002000C)
 #define GPIOA_IDR (*(volatile unsigned int *)0x40020010)
+#define GPIOB_ODR (*(volatile unsigned int *)0x40020414)
 
 #include <stdbool.h>
 
@@ -59,7 +60,79 @@ int main() {
     GPIOA_PUPDR |= (1 << 2); // PA1
     GPIOA_PUPDR &= ~(1 << 3); 
     
+    int mode_state = 0;
+    int speed_state = 0;
 
+    while (1) {
 
+        // check button pressed state -> advance mode state
+        if (ButtonPressed(0) == true) {
+            mode_state = (mode_state + 1) % 4;
+        }
 
+        switch (mode_state) {
+            
+            case 0:
+                // ALL OFF MODE
+                GPIOB_ODR &= ~(1 << 0); // drive PB0 LOW
+                GPIOB_ODR &= ~(1 << 1); // drive PB1 LOW
+                GPIOB_ODR &= ~(1 << 2); // drive PB2 LOW
+                break;
+
+            case 1:
+                // ALL ON MODE
+                GPIOB_ODR |= (1 << 0); // drive PB0 HIGH
+                GPIOB_ODR |= (1 << 1); // drive PB1 HIGH
+                GPIOB_ODR |= (1 << 2); // drive PB2 HIGH
+                break;
+
+            case 2:
+                // ALTERNATING MODE
+                // LEDs 1 and 2 blink opposite to each other (1 on while 2 off, then swap)
+                // a delay function will block the ButtonPressed function so can not be used
+
+                static int counter = 0;
+                static int led_state = 0;
+                counter++;
+                if (counter >= 1000000) { // counter may need tuning
+                    counter = 0;
+                    led_state = !led_state;
+                    if (led_state == 0) {
+                        GPIOB_ODR &= ~(1 << 0); // drive PB0 LOW (LED3 OFF)
+                        GPIOB_ODR &= ~(1 << 1); // drive PB1 LOW (LED2 OFF)
+                        GPIOB_ODR |= (1 << 2); // drive PB2 HIGH (LED1 ON)
+                    } else {
+                        GPIOB_ODR &= ~(1 << 0); // drive PB0 LOW (LED3 OFF)
+                        GPIOB_ODR &= ~(1 << 2); // drive PB2 LOW (LED1 OFF)
+                        GPIOB_ODR |= (1 << 1); // drive PB1 HIGH (LED2 ON)
+                    }
+                }
+                break;
+            
+            case 3:
+                // CHASE MODE
+
+                GPIOB_ODR &= ~(1 << 2); // drive PB2 LOW (LED1 OFF)
+                GPIOB_ODR &= ~(1 << 1); // drive PB1 LOW (LED2 OFF)
+
+                // check speed mode: slow, medium, fast
+                if (ButtonPressed(1) == true) {
+                    speed_state = (speed_state + 1) % 3;
+                }
+
+                // set speed of blinking led
+                int threshold;
+                if (speed_state == 0) threshold = 1000000;
+                else if (speed_state == 1) threshold = 150000;
+                else threshold = 100000;
+
+                static int counter3 = 0;
+                counter3++;
+                if (counter3 >= threshold) {
+                    counter3 = 0;
+                    GPIOB_ODR ^= (1 << 0); // toggle PB0 (LED3)
+                }
+                break;
+        }
+    }
 }
