@@ -33,18 +33,19 @@ All components are external on breadboard, nothing onboard used.
 
 ![GPIO Control Panel schematic](schematic.png)
 
-Wiring diagram created in Cirkit Designer. See `schematic.png` in this folder (or linked Cirkit Designer project) for the full breadboard layout, including button wiring, LED orientation, and the LED2 pull up resistor placement.
+Wiring diagram created in Cirkit Designer. See `schematic.png` in this folder for the full breadboard layout, including button wiring, LED orientation, and the LED2 pull up resistor placement.
 
 ## Build
 
 ```
 make clean
 make
+make flash
 ```
 
 ## Notes
 
-- **Open drain pull up resistor value matters.** A pull up that is too high in value (tested 68kΩ and 220MΩ) is electrically correct — the pin does reach a valid logic high voltage — but the resulting current is too low for the LED to visibly light. Settled on 470Ω, which is on the low end of typical pull up values but works well here. If reusing this pattern elsewhere, aim for 1kΩ to 10kΩ as a rule of thumb and confirm current draw is enough for the load.
+- **Open drain pull up resistor value matters.** A pull up that is too high in value is electrically correct, the pin does reach a valid logic high voltage, but the resulting current is too low for the LED to visibly light. Settled on 470Ω, which is on the low end of typical pull up values but works well here. If reusing this pattern elsewhere, aim for 1kΩ to 10kΩ as a rule of thumb and confirm current draw is enough for the load.
 - **LED2 (green) is visibly dimmer than LED1 and LED3.** This is expected, not a fault. The open drain path has two resistors in series (pull up and current limiter) versus one for the push pull LEDs, so less current flows overall. Color dependent forward voltage differences add to this.
 - **linker.ld must define `_sidata`, `_sdata`, `_edata`, `_sbss`, `_ebss`.** An older copy pasted version of this project's linker script was missing these symbol definitions, causing undefined reference errors at link time even though startup.s correctly referenced them. Fixed by adding location counter assignments around `.data` and `.bss` in the linker script. Worth checking other project folders copied from the same older template.
 
