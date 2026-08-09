@@ -126,7 +126,7 @@ int main() {
                 // set speed of blinking led
                 int threshold;
                 if (speed_state == 0) threshold = 100000;
-                else if (speed_state == 1) threshold = 70000;
+                else if (speed_state == 1) threshold = 50000;
                 else threshold = 20000;
 
                 // blink LED based on speed selected
