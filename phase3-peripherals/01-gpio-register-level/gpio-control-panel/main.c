@@ -96,7 +96,7 @@ int main() {
                 static int counter = 0;
                 static int led_state = 0;
                 counter++;
-                if (counter >= 1000000) { // counter may need tuning
+                if (counter >= 100000) { // counter may need tuning
                     counter = 0;
                     led_state = !led_state;
                     if (led_state == 0) {
@@ -125,9 +125,9 @@ int main() {
 
                 // set speed of blinking led
                 int threshold;
-                if (speed_state == 0) threshold = 1000000;
-                else if (speed_state == 1) threshold = 150000;
-                else threshold = 100000;
+                if (speed_state == 0) threshold = 100000;
+                else if (speed_state == 1) threshold = 70000;
+                else threshold = 20000;
 
                 // blink LED based on speed selected
                 static int counter3 = 0;
