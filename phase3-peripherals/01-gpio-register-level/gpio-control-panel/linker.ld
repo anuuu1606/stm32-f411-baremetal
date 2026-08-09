@@ -15,13 +15,19 @@ SECTIONS
         *(.rodata)
     } > FLASH
 
+    _sidata = LOADADDR(.data);   /* where .data's initial values live in FLASH */
+
     .data :
     {
+        _sdata = .;               /* start of .data in RAM */
         *(.data)
+        _edata = .;                /* end of .data in RAM */
     } > RAM AT> FLASH
 
     .bss :
     {
+        _sbss = .;                 /* start of .bss in RAM */
         *(.bss)
+        _ebss = .;                  /* end of .bss in RAM */
     } > RAM
 }
