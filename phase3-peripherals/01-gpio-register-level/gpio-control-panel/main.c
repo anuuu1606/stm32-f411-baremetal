@@ -74,6 +74,7 @@ int main() {
             
             case 0:
                 // ALL OFF MODE
+
                 GPIOB_ODR &= ~(1 << 0); // drive PB0 LOW
                 GPIOB_ODR &= ~(1 << 1); // drive PB1 LOW
                 GPIOB_ODR &= ~(1 << 2); // drive PB2 LOW
@@ -81,12 +82,13 @@ int main() {
 
             case 1:
                 // ALL ON MODE
+
                 GPIOB_ODR |= (1 << 0); // drive PB0 HIGH
                 GPIOB_ODR |= (1 << 1); // drive PB1 HIGH
                 GPIOB_ODR |= (1 << 2); // drive PB2 HIGH
                 break;
 
-            case 2:
+            case 2: {
                 // ALTERNATING MODE
                 // LEDs 1 and 2 blink opposite to each other (1 on while 2 off, then swap)
                 // a delay function will block the ButtonPressed function so can not be used
@@ -107,9 +109,10 @@ int main() {
                         GPIOB_ODR |= (1 << 1); // drive PB1 HIGH (LED2 ON)
                     }
                 }
+                }
                 break;
             
-            case 3:
+            case 3: {
                 // CHASE MODE
 
                 GPIOB_ODR &= ~(1 << 2); // drive PB2 LOW (LED1 OFF)
@@ -126,11 +129,13 @@ int main() {
                 else if (speed_state == 1) threshold = 150000;
                 else threshold = 100000;
 
+                // blink LED based on speed selected
                 static int counter3 = 0;
                 counter3++;
                 if (counter3 >= threshold) {
                     counter3 = 0;
                     GPIOB_ODR ^= (1 << 0); // toggle PB0 (LED3)
+                }
                 }
                 break;
         }
