@@ -1,10 +1,10 @@
-#define RCC_AHB1ENR (*(volatile unsigned int *)0x40023830)
-#define GPIOA_MODER (*(volatile unsigned int *)0x40020000)
-#define GPIOB_MODER (*(volatile unsigned int *)0x40020400)
-#define GPIOB_OTYPER (*(volatile unsigned int *)0x40020404)
-#define GPIOA_PUPDR (*(volatile unsigned int *)0x4002000C)
-#define GPIOA_IDR (*(volatile unsigned int *)0x40020010)
-#define GPIOB_ODR (*(volatile unsigned int *)0x40020414)
+#define RCC_AHB1ENR (*(volatile uint32_t *)0x40023830)
+#define GPIOA_MODER (*(volatile uint32_t *)0x40020000)
+#define GPIOB_MODER (*(volatile uint32_t *)0x40020400)
+#define GPIOB_OTYPER (*(volatile uint32_t *)0x40020404)
+#define GPIOA_PUPDR (*(volatile uint32_t *)0x4002000C)
+#define GPIOA_IDR (*(volatile uint32_t *)0x40020010)
+#define GPIOB_ODR (*(volatile uint32_t *)0x40020414)
 
 #include <stdbool.h>
 
